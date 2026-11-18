@@ -1,0 +1,48 @@
+# 🎮 Quote Arcade · Arcade de Frases Épicas
+
+Arcade web donde votas frases de **películas, series y videojuegos**. Cada frase tiene su portada, un ranking **Top 10 en tiempo real**, traducción y un modal que se expande al hacer clic.
+
+> Proyecto 5 · Curso 1015 Programación Orientada a Eventos.
+
+## ✨ Funciones
+- **Hero rotativo** con las 5 frases más votadas, y **galería deslizable** (flechas, arrastre o scroll).
+- **Clic en una portada → se expande** con la imagen de la película/juego, votos y ranking.
+- **Top 10 en vivo**: se reordena al instante cuando votas.
+- **CRUD completo con SQLite**: agregar, ver, editar y eliminar frases en cualquier categoría.
+- **Votos**: un voto por frase (puedes quitarlo).
+- **Traducción**: botón "Español" para traducir todo el sitio, y selector de idioma (ES, EN, PT, FR, IT, DE) en cada frase.
+- Búsqueda, filtro por categoría, actividad reciente y diseño responsive (móvil y escritorio).
+
+## 🧱 Tecnologías
+TypeScript · Vite · **SQL.js (SQLite en el navegador)** · patrón MVC · CSS puro.
+
+## 🗄️ Base de datos
+SQL.js corre SQLite en WebAssembly. La base se exporta a **Base64** y se guarda en `localStorage` (clave `sqlite_db_arcade`) después de cada cambio, así los datos **persisten al recargar**. Tablas: `phrases`, `my_votes`, `activity`. Todas las consultas son parametrizadas (`?`).
+
+> Como la base vive en el navegador de cada persona, los votos no se comparten entre usuarios.
+
+## 📁 Estructura
+```
+src/
+├── main.ts
+├── db/          database.ts (conexión SQLite) · seed.ts (frases iniciales)
+├── models/      PhraseModel.ts (CRUD y votos)
+├── views/       AppView.ts (interfaz)
+├── controllers/ PhraseController.ts (coordina y valida)
+├── services/    translate.ts (traducción)
+└── styles/      styles.css
+public/          favicon.ico · img/ (portadas en WebP)
+```
+
+## ▶️ Ejecutar
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # genera /dist
+```
+
+## 🚀 Despliegue
+Repositorio en GitHub → importado en Vercel (preset **Vite**, comando `npm run build`, salida `dist`). Cada `git push` redespliega solo.
+
+## 📝 Créditos
+Imágenes y frases © de sus respectivos dueños (Marvel Studios, Rockstar Games, Sony Santa Monica). Uso **exclusivamente educativo**.
