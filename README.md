@@ -32,5 +32,4 @@ npm run build    # genera /dist
 ## 🚀 Despliegue
 Repositorio en GitHub → importado en Vercel (preset **Vite**, comando `npm run build`, salida `dist`). Cada `git push` redespliega solo.
 
-## 📝 Créditos
-Imágenes y frases © de sus respectivos dueños (Marvel Studios, Rockstar Games, Sony Santa Monica). Uso **exclusivamente educativo**.
+
