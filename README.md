@@ -25,8 +25,8 @@ SQL.js corre SQLite en WebAssembly. La base se exporta a **Base64** y se guarda 
 ## ▶️ Ejecutar
 ```bash
 npm install
-npm run dev      # http://localhost:5173
-npm run build    # genera /dist
+npm run dev      
+npm run build    
 ```
 
 ## 🚀 Despliegue

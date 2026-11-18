@@ -117,7 +117,7 @@ export class AppView {
     g.innerHTML = list.length ? list.map((p) => `
       <article class="card" data-action="open" data-id="${p.id}" tabindex="0">
         ${cover(p, "card")}<div class="card-shade"></div>
-        <span class="votes">🪙 ${p.votes}</span>
+        <span class="votes">${p.id > 12 ? "✨ Nueva · " : ""}🪙 ${p.votes}</span>
         <div class="card-t">
           <p>“${esc(txt(p, lang))}”</p>
           <small>${esc(p.character || "Anónimo")}</small>

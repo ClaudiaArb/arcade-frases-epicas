@@ -33,9 +33,12 @@ export class PhraseController {
   private heroList(): Phrase[] { return this.byCat().slice(0, 5); }
   private gallery(): Phrase[] {
     const q = this.q.trim().toLowerCase();
-    return this.byCat().filter((p) => !q || `${p.text} ${p.es ?? ""} ${p.character} ${p.source}`.toLowerCase().includes(q));
+    return this.byCat()
+      .filter((p) => !q || `${p.text} ${p.es ?? ""} ${p.character} ${p.source}`.toLowerCase().includes(q))
+      .sort((a, b) => a.id - b.id);
   }
-
+ 
+ 
   private refresh(): void {
     this.all = this.model.all();
     const hero = this.heroList();
@@ -169,7 +172,7 @@ export class PhraseController {
 
   private saveForm(f: HTMLFormElement): void {
     const d = new FormData(f);
-    const text = String(d.get("text") ?? "").trim().replace(/\s+/g, " ");
+    const text = String(d.get("text") ?? "").trim().replace(/^[“"«']+|[”"»']+$/g, "").replace(/\s+/g, " ");
     const source = String(d.get("source") ?? "").trim();
     const image = String(d.get("image") ?? "").trim();
     const editId = f.dataset.id ? Number(f.dataset.id) : null;
@@ -191,6 +194,6 @@ export class PhraseController {
     this.view.closeModal();
     this.openId = null;
     this.refresh();
-    this.view.toast(editId ? "Cambios guardados ✔" : "¡Frase publicada! Ya puede recibir votos 🎮");
+        if (!editId) document.getElementById("gallery")!.scrollTo({ left: 99999, behavior: "smooth" });
   }
 }
