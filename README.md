@@ -21,18 +21,6 @@ SQL.js corre SQLite en WebAssembly. La base se exporta a **Base64** y se guarda 
 
 > Como la base vive en el navegador de cada persona, los votos no se comparten entre usuarios.
 
-## 📁 Estructura
-```
-src/
-├── main.ts
-├── db/          database.ts (conexión SQLite) · seed.ts (frases iniciales)
-├── models/      PhraseModel.ts (CRUD y votos)
-├── views/       AppView.ts (interfaz)
-├── controllers/ PhraseController.ts (coordina y valida)
-├── services/    translate.ts (traducción)
-└── styles/      styles.css
-public/          favicon.ico · img/ (portadas en WebP)
-```
 
 ## ▶️ Ejecutar
 ```bash
