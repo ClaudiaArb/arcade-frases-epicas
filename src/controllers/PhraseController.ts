@@ -35,10 +35,9 @@ export class PhraseController {
     const q = this.q.trim().toLowerCase();
     return this.byCat()
       .filter((p) => !q || `${p.text} ${p.es ?? ""} ${p.character} ${p.source}`.toLowerCase().includes(q))
-      .sort((a, b) => a.id - b.id);
+      .sort((a, b) => a.id - b.id); // las frases nuevas quedan al final
   }
- 
- 
+
   private refresh(): void {
     this.all = this.model.all();
     const hero = this.heroList();
@@ -70,6 +69,7 @@ export class PhraseController {
     }
     if (changed && this.lang === "es") { this.all = this.model.all(); this.refreshViewsOnly(); }
   }
+
   private refreshViewsOnly(): void {
     this.view.renderHero(this.heroList(), this.heroIdx, this.lang);
     this.view.renderRanking(this.byCat().slice(0, 10), this.lang, null);
@@ -91,7 +91,10 @@ export class PhraseController {
 
     document.addEventListener("input", (e) => {
       const t = e.target as HTMLElement;
-      if (t.id === "search") { this.q = (t as HTMLInputElement).value; this.view.renderGallery(this.gallery(), this.lang, document.getElementById("gal-title")!.textContent ?? ""); }
+      if (t.id === "search") {
+        this.q = (t as HTMLInputElement).value;
+        this.view.renderGallery(this.gallery(), this.lang, document.getElementById("gal-title")!.textContent ?? "");
+      }
     });
 
     document.addEventListener("submit", (e) => {
@@ -103,11 +106,18 @@ export class PhraseController {
       if (e.key === "Escape" && !document.getElementById("modal")!.hidden) this.close();
     });
 
-    // Galería: arrastrar con el mouse/dedo sin disparar el clic de la tarjeta
+    // Galería: arrastrar con el mouse sin disparar el clic de la tarjeta
     const g = document.getElementById("gallery")!;
     let down = false, sx = 0, sl = 0, moved = false;
-    g.addEventListener("pointerdown", (e) => { if ((e as PointerEvent).pointerType === "mouse") { down = true; moved = false; sx = e.clientX; sl = g.scrollLeft; } });
-    window.addEventListener("pointermove", (e) => { if (!down) return; const dx = e.clientX - sx; if (Math.abs(dx) > 5) moved = true; if (moved) g.scrollLeft = sl - dx; });
+    g.addEventListener("pointerdown", (e) => {
+      if ((e as PointerEvent).pointerType === "mouse") { down = true; moved = false; sx = e.clientX; sl = g.scrollLeft; }
+    });
+    window.addEventListener("pointermove", (e) => {
+      if (!down) return;
+      const dx = e.clientX - sx;
+      if (Math.abs(dx) > 5) moved = true;
+      if (moved) g.scrollLeft = sl - dx;
+    });
     window.addEventListener("pointerup", () => { down = false; window.setTimeout(() => (moved = false), 0); });
 
     document.addEventListener("click", (e) => {
@@ -126,11 +136,22 @@ export class PhraseController {
         case "open": this.open(id, e.clientX, e.clientY); break;
         case "vote": this.vote(id); break;
         case "add": this.view.openForm(null); this.openId = null; break;
-        case "edit": { const p = this.all.find((x) => x.id === id); if (p) { this.view.openForm(p); (document.getElementById("phrase-form") as HTMLFormElement).dataset.id = String(id); } break; }
+        case "edit": {
+          const p = this.all.find((x) => x.id === id);
+          if (p) {
+            this.view.openForm(p);
+            (document.getElementById("phrase-form") as HTMLFormElement).dataset.id = String(id);
+          }
+          break;
+        }
         case "delete": this.remove(id); break;
         case "translate": void this.translateOpen(id); break;
         case "close": this.close(); break;
-        case "reset": if (confirm("¿Restaurar las 12 frases originales? Se borrarán tus cambios y votos.")) { this.model.reset(); this.close(); this.refresh(); this.view.toast("Datos restaurados ✔"); } break;
+        case "reset":
+          if (confirm("¿Restaurar las 12 frases originales? Se borrarán tus cambios y votos.")) {
+            this.model.reset(); this.close(); this.refresh(); this.view.toast("Datos restaurados ✔");
+          }
+          break;
       }
     });
   }
@@ -141,6 +162,7 @@ export class PhraseController {
     this.openId = id;
     this.view.openDetail(p, this.rankOf(p), this.lang, x || innerWidth / 2, y || innerHeight / 2);
   }
+
   private close(): void { this.openId = null; this.view.closeModal(); }
 
   private vote(id: number): void {
@@ -186,14 +208,23 @@ export class PhraseController {
       text, source, character: String(d.get("character") ?? "").trim(), category: d.get("category") as Category,
       hero: keep ? prev!.hero : image || null, card: keep ? prev!.card : image || null,
     };
+
+    let newId: number | null = null;
     try {
-      if (editId) this.model.update(editId, input); else this.model.create(input);
+      if (editId) this.model.update(editId, input); else newId = this.model.create(input);
     } catch (err) {
       return this.view.formError(String(err).includes("UNIQUE") ? "Esa frase ya existe en el arcade." : "No se pudo guardar. Intenta de nuevo.");
     }
+
     this.view.closeModal();
     this.openId = null;
     this.refresh();
-        if (!editId) document.getElementById("gallery")!.scrollTo({ left: 99999, behavior: "smooth" });
+
+    if (newId) {
+      const c = document.querySelector<HTMLElement>(`.card[data-id="${newId}"]`);
+      c?.classList.add("pop");
+      c?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+    this.view.toast(editId ? "Cambios guardados ✔" : "¡Publicada! Búscala al final de la galería ✨");
   }
 }

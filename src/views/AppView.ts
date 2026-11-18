@@ -47,7 +47,7 @@ export class AppView {
       <aside class="panel rank" id="ranking"></aside>
     </section>
     <section class="gal-sec">
-      <div class="gal-head"><h3 id="gal-title">Más frases para ti</h3>
+      <div class="gal-head"><div><h3 id="gal-title">Más frases para ti</h3><p class="gal-hint">✨ Las frases nuevas se agregan al final de la fila →</p></div>
         <div class="arrows"><button data-action="gal-prev" aria-label="Anterior">‹</button><button class="hot" data-action="gal-next" aria-label="Siguiente">›</button></div>
       </div>
       <div class="gallery" id="gallery"></div>

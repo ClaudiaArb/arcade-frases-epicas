@@ -187,3 +187,7 @@ blockquote{font-size:clamp(24px,3.4vw,44px);line-height:1.13;font-weight:700;tex
   .dots{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
+
+.gal-hint{color:var(--mute);font-size:13px;margin-top:4px}
+.card.pop{animation:pop 1.6s ease 3}
+@keyframes pop{0%,100%{box-shadow:0 0 0 0 rgba(255,61,110,0)}50%{box-shadow:0 0 0 5px rgba(255,61,110,.8),0 0 50px rgba(255,61,110,.8)}}
